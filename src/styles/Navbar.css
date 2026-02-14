@@ -1,0 +1,124 @@
+.navbar {
+    height: 80px;
+    background: var(--card-bg);
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+    display: flex;
+    align-items: center;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+}
+
+.nav-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: var(--secondary);
+}
+
+.logo span span {
+    color: var(--primary);
+}
+
+.logo-icon {
+    color: var(--primary);
+}
+
+.nav-links {
+    display: flex;
+    gap: 30px;
+}
+
+.nav-link {
+    font-weight: 600;
+    color: var(--secondary);
+    transition: var(--transition);
+    font-size: 1rem;
+}
+
+.nav-link:hover {
+    color: var(--primary);
+}
+
+.nav-actions {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+}
+
+.cart-btn {
+    position: relative;
+    color: var(--secondary);
+    transition: var(--transition);
+}
+
+.cart-btn:hover {
+    color: var(--primary);
+}
+
+.cart-badge {
+    position: absolute;
+    top: -8px;
+    right: -8px;
+    background: var(--primary);
+    color: white;
+    font-size: 0.7rem;
+    font-weight: 700;
+    width: 18px;
+    height: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    border: 2px solid var(--card-bg);
+}
+
+.user-profile {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    background: var(--background);
+    padding: 6px 12px;
+    border-radius: 30px;
+}
+
+.user-info {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 600;
+}
+
+.logout-btn {
+    color: var(--text-muted);
+    display: flex;
+    align-items: center;
+}
+
+.logout-btn:hover {
+    color: var(--error);
+}
+
+.auth-btns {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.btn-login {
+    font-weight: 600;
+    color: var(--secondary);
+}
+
+.btn-signup {
+    padding: 8px 20px;
+}

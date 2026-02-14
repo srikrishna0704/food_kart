@@ -1,0 +1,54 @@
+.success-page {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: calc(100vh - 150px);
+}
+
+.success-card {
+    max-width: 600px;
+    width: 100%;
+    padding: 60px 40px;
+    text-align: center;
+}
+
+.success-icon-wrapper {
+    color: var(--success);
+    margin-bottom: 25px;
+}
+
+.success-card h1 {
+    font-size: 2.25rem;
+    font-weight: 800;
+    color: var(--secondary);
+    margin-bottom: 10px;
+}
+
+.order-number {
+    color: var(--text-muted);
+    font-weight: 600;
+    font-size: 1.1rem;
+    margin-bottom: 25px;
+}
+
+.order-number span {
+    color: var(--primary);
+}
+
+.success-message {
+    color: var(--text-muted);
+    line-height: 1.7;
+    margin-bottom: 40px;
+}
+
+.success-actions {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+}
+
+@media (max-width: 500px) {
+    .success-actions {
+        flex-direction: column;
+    }
+}
