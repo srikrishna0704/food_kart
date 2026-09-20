@@ -1,3 +1,6 @@
+import { createRequire } from 'module';
+const require = createRequire(import.meta.url);
+
 const express = require('express');
 const cors = require('cors');
 const dotenv = require('dotenv');
@@ -11,7 +14,7 @@ const app = express();
 app.use(express.json());
 app.use(cors());
 
-// Health check endpoint with diagnostic info
+// Diagnostic endpoint
 app.get(['/api/health', '/health'], async (req, res) => {
     try {
         await connectDB();
@@ -59,4 +62,4 @@ app.use('/restaurants', restaurantRoutes);
 
 app.get(['/api', '/'], (req, res) => res.json({ status: 'active', message: 'FoodKart API on Vercel' }));
 
-module.exports = app;
+export default app;
