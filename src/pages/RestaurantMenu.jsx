@@ -14,12 +14,28 @@ const RestaurantMenu = () => {
     const { toggleFavorite, isFavorite } = useFavorites();
 
     useEffect(() => {
-        // Find restaurant by ID (converting id from string to number if needed)
-        const found = localRestaurants.find(r => r.id.toString() === id.toString());
-        if (found) {
-            setRestaurant(found);
-        }
-        setLoading(false);
+        const fetchRestaurant = async () => {
+            try {
+                const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
+                const res = await fetch(`${apiUrl}/restaurants/${id}`);
+                if (res.ok) {
+                    const data = await res.json();
+                    if (data) {
+                        setRestaurant(data);
+                        setLoading(false);
+                        return;
+                    }
+                }
+            } catch (err) {
+                console.warn("Using fallback local restaurant data");
+            }
+            const found = localRestaurants.find(r => r.id.toString() === id.toString());
+            if (found) {
+                setRestaurant(found);
+            }
+            setLoading(false);
+        };
+        fetchRestaurant();
     }, [id]);
 
     const getItemQuantity = (itemId) => {

@@ -3,7 +3,7 @@ import axios from 'axios';
 
 const AuthContext = createContext();
 
-const API_URL = import.meta.env.VITE_API_URL || 'https://foodkart-backend-tmky.onrender.com/api';
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
 
 export const AuthProvider = ({ children }) => {
     const [user, setUser] = useState(null);
@@ -55,13 +55,29 @@ export const AuthProvider = ({ children }) => {
         setUser(null);
     };
 
+    const updateUserProfile = async (updatedData) => {
+        try {
+            const userId = user?.id || user?._id;
+            const res = await axios.put(`${API_URL}/auth/profile`, { userId, ...updatedData });
+            const updatedUser = { ...user, ...res.data.user };
+            localStorage.setItem('user', JSON.stringify(updatedUser));
+            setUser(updatedUser);
+            return updatedUser;
+        } catch (error) {
+            // Fallback for local update if backend fails
+            const updatedUser = { ...user, ...updatedData };
+            localStorage.setItem('user', JSON.stringify(updatedUser));
+            setUser(updatedUser);
+            return updatedUser;
+        }
+    };
+
     const resetPassword = async (email) => {
-        // Placeholder as custom backend might not have this yet
         console.log('Reset password for:', email);
     };
 
     return (
-        <AuthContext.Provider value={{ user, signup, login, logout, resetPassword, loading }}>
+        <AuthContext.Provider value={{ user, signup, login, logout, resetPassword, updateUserProfile, loading }}>
             {!loading && children}
         </AuthContext.Provider>
     );

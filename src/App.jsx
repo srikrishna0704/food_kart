@@ -19,6 +19,7 @@ import Orders from './pages/Orders';
 import Favorites from './pages/Favorites';
 import ForgotPassword from './pages/ForgotPassword';
 import ProtectedRoute from './components/ProtectedRoute';
+import ActiveOrderWidget from './components/ActiveOrderWidget';
 
 function App() {
 
@@ -28,6 +29,7 @@ function App() {
         <FavoritesProvider>
           <Router>
             <Navbar />
+            <ActiveOrderWidget />
             <main style={{ flex: 1 }}>
               <Routes>
                 <Route path="/" element={<Home />} />

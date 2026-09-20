@@ -38,7 +38,8 @@ exports.register = async (req, res) => {
             user: {
                 id: user._id,
                 name: user.name,
-                email: user.email
+                email: user.email,
+                phone: user.phone || ''
             }
         });
     } catch (error) {
@@ -76,11 +77,44 @@ exports.login = async (req, res) => {
             user: {
                 id: user._id,
                 name: user.name,
-                email: user.email
+                email: user.email,
+                phone: user.phone || ''
             }
         });
     } catch (error) {
         console.error(error.message);
         res.status(500).send('Server error');
+    }
+};
+
+// @desc    Update user profile
+// @route   PUT /api/auth/profile
+// @access  Public
+exports.updateProfile = async (req, res) => {
+    try {
+        const { userId, name, email, phone } = req.body;
+        const user = await User.findById(userId);
+        if (!user) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+
+        if (name) user.name = name;
+        if (email) user.email = email;
+        if (phone !== undefined) user.phone = phone;
+
+        await user.save();
+
+        res.json({
+            message: 'Profile updated successfully',
+            user: {
+                id: user._id,
+                name: user.name,
+                email: user.email,
+                phone: user.phone
+            }
+        });
+    } catch (error) {
+        console.error(error.message);
+        res.status(500).json({ message: 'Server error updating profile' });
     }
 };

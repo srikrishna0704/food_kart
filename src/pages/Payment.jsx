@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useCart } from '../context/CartContext';
 import { useAuth } from '../context/AuthContext';
-import { CreditCard, ShieldCheck, AlertCircle, MapPin, ChevronRight, Info } from 'lucide-react';
+import { CreditCard, ShieldCheck, AlertCircle, MapPin, ChevronRight, Info, Clock } from 'lucide-react';
 import '../styles/Payment.css';
 import axios from 'axios';
 
@@ -54,12 +54,17 @@ const Payment = () => {
 
         try {
             if (parseFloat(amount) === parseFloat(grandTotal.toFixed(2))) {
+                const now = new Date();
+                const arrival = new Date(now.getTime() + 35 * 60000).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+
                 await axios.post(`${API_URL}/orders/place`, {
                     userId: user.id || user._id,
                     items: cart,
                     totalPrice: grandTotal,
                     address: selectedAddress,
-                    status: 'Confirmed'
+                    status: 'Preparing',
+                    deliveryTime: '30 - 45 mins',
+                    estimatedArrival: arrival
                 });
 
                 clearCart();
@@ -130,6 +135,14 @@ const Payment = () => {
                             </Link>
                         </div>
                     )}
+                </div>
+
+                <div className="delivery-time-banner" style={{ background: 'rgba(255, 107, 107, 0.08)', padding: '12px 18px', borderRadius: '10px', margin: '15px 0', display: 'flex', alignItems: 'center', gap: '12px', border: '1px solid rgba(255, 107, 107, 0.2)' }}>
+                    <Clock size={22} style={{ color: '#ff4757', flexShrink: 0 }} />
+                    <div>
+                        <h4 style={{ margin: 0, fontSize: '14px', color: '#ff4757' }}>Estimated Delivery Time</h4>
+                        <p style={{ margin: '2px 0 0 0', fontSize: '13px', opacity: 0.8 }}>30 - 45 minutes (Arriving around {new Date(Date.now() + 35 * 60000).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })})</p>
+                    </div>
                 </div>
 
                 <div className="amount-display">

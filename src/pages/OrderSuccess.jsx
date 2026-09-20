@@ -29,9 +29,9 @@ const OrderSuccess = () => {
                     <Link to="/" className="btn btn-primary">
                         <Home size={18} /> Back to Home
                     </Link>
-                    <button className="btn btn-secondary">
+                    <Link to="/orders" className="btn btn-secondary">
                         <Package size={18} /> Track Order
-                    </button>
+                    </Link>
                 </div>
             </div>
         </div>

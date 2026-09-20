@@ -7,13 +7,47 @@ import '../styles/Profile.css';
 const API_URL = import.meta.env.VITE_API_URL || 'https://foodkart-backend-tmky.onrender.com/api';
 
 const Profile = () => {
-    const { user, logout } = useAuth();
+    const { user, logout, updateUserProfile } = useAuth();
     const [orders, setOrders] = useState([]);
     const [addresses, setAddresses] = useState([]);
     const [loading, setLoading] = useState(true);
     const [activeTab, setActiveTab] = useState('Account Info');
     const [newAddress, setNewAddress] = useState('');
     const [saving, setSaving] = useState(false);
+
+    // Edit Profile State
+    const [isEditing, setIsEditing] = useState(false);
+    const [editName, setEditName] = useState('');
+    const [editEmail, setEditEmail] = useState('');
+    const [editPhone, setEditPhone] = useState('');
+    const [updateMsg, setUpdateMsg] = useState('');
+
+    useEffect(() => {
+        if (user) {
+            setEditName(user.name || user.displayName || '');
+            setEditEmail(user.email || '');
+            setEditPhone(user.phone || '');
+        }
+    }, [user]);
+
+    const handleSaveProfile = async (e) => {
+        e.preventDefault();
+        setSaving(true);
+        try {
+            await updateUserProfile({
+                name: editName,
+                email: editEmail,
+                phone: editPhone
+            });
+            setUpdateMsg('Profile updated successfully!');
+            setIsEditing(false);
+            setTimeout(() => setUpdateMsg(''), 3000);
+        } catch (err) {
+            console.error(err);
+        } finally {
+            setSaving(false);
+        }
+    };
 
     useEffect(() => {
         const fetchData = async () => {
@@ -67,19 +101,71 @@ const Profile = () => {
                 return (
                     <div className="info-card card animate-fade-in">
                         <h3>Personal Information</h3>
-                        <div className="info-group">
-                            <label>Full Name</label>
-                            <p>{user.name || user.displayName}</p>
-                        </div>
-                        <div className="info-group">
-                            <label>Email Address</label>
-                            <p>{user.email}</p>
-                        </div>
-                        <div className="info-group">
-                            <label>Phone Number</label>
-                            <p>{user.phone || '+1 (555) 000-0000'}</p>
-                        </div>
-                        <button className="btn-edit-profile">Edit Profile</button>
+                        {updateMsg && <div className="auth-success-msg" style={{ marginBottom: '15px', color: '#2ed573' }}>{updateMsg}</div>}
+                        
+                        {isEditing ? (
+                            <form onSubmit={handleSaveProfile} className="edit-profile-form" style={{ marginTop: '15px' }}>
+                                <div className="info-group">
+                                    <label>Full Name</label>
+                                    <input
+                                        type="text"
+                                        className="input-field"
+                                        value={editName}
+                                        onChange={(e) => setEditName(e.target.value)}
+                                        required
+                                        style={{ width: '100%', padding: '10px', borderRadius: '8px', border: '1px solid #ccc', marginTop: '5px' }}
+                                    />
+                                </div>
+                                <div className="info-group" style={{ marginTop: '15px' }}>
+                                    <label>Email Address</label>
+                                    <input
+                                        type="email"
+                                        className="input-field"
+                                        value={editEmail}
+                                        onChange={(e) => setEditEmail(e.target.value)}
+                                        required
+                                        style={{ width: '100%', padding: '10px', borderRadius: '8px', border: '1px solid #ccc', marginTop: '5px' }}
+                                    />
+                                </div>
+                                <div className="info-group" style={{ marginTop: '15px' }}>
+                                    <label>Phone Number</label>
+                                    <input
+                                        type="text"
+                                        className="input-field"
+                                        placeholder="+1 (555) 000-0000"
+                                        value={editPhone}
+                                        onChange={(e) => setEditPhone(e.target.value)}
+                                        style={{ width: '100%', padding: '10px', borderRadius: '8px', border: '1px solid #ccc', marginTop: '5px' }}
+                                    />
+                                </div>
+                                <div style={{ display: 'flex', gap: '10px', marginTop: '20px' }}>
+                                    <button type="submit" className="btn btn-primary" disabled={saving}>
+                                        {saving ? 'Saving...' : 'Save Changes'}
+                                    </button>
+                                    <button type="button" className="btn btn-secondary" onClick={() => setIsEditing(false)}>
+                                        Cancel
+                                    </button>
+                                </div>
+                            </form>
+                        ) : (
+                            <>
+                                <div className="info-group">
+                                    <label>Full Name</label>
+                                    <p>{user.name || user.displayName}</p>
+                                </div>
+                                <div className="info-group">
+                                    <label>Email Address</label>
+                                    <p>{user.email}</p>
+                                </div>
+                                <div className="info-group">
+                                    <label>Phone Number</label>
+                                    <p>{user.phone || 'Not set'}</p>
+                                </div>
+                                <button onClick={() => setIsEditing(true)} className="btn-edit-profile" style={{ marginTop: '15px', cursor: 'pointer' }}>
+                                    Edit Profile
+                                </button>
+                            </>
+                        )}
                     </div>
                 );
             case 'My Orders':

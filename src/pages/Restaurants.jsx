@@ -12,10 +12,29 @@ const Restaurants = () => {
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        setRestaurants(localRestaurants);
-        const uniqueCategories = ['All', ...new Set(localRestaurants.map(r => r.category))];
-        setCategories(uniqueCategories);
-        setLoading(false);
+        const fetchRestaurants = async () => {
+            try {
+                const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
+                const res = await fetch(`${apiUrl}/restaurants`);
+                if (res.ok) {
+                    const data = await res.json();
+                    if (data && data.length > 0) {
+                        setRestaurants(data);
+                        const uniqueCategories = ['All', ...new Set(data.map(r => r.category))];
+                        setCategories(uniqueCategories);
+                        setLoading(false);
+                        return;
+                    }
+                }
+            } catch (err) {
+                console.warn("Using fallback local restaurants data");
+            }
+            setRestaurants(localRestaurants);
+            const uniqueCategories = ['All', ...new Set(localRestaurants.map(r => r.category))];
+            setCategories(uniqueCategories);
+            setLoading(false);
+        };
+        fetchRestaurants();
     }, []);
 
     const filteredRestaurants = restaurants.filter(res => {

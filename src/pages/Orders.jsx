@@ -75,7 +75,10 @@ const Orders = () => {
                             <div className="order-footer-details">
                                 <div className="footer-meta">
                                     <p className="footer-date"><Clock size={16} /> {new Date(order.createdAt).toLocaleString()}</p>
-                                    <p className="footer-address"><MapPin size={16} /> {order.address}</p>
+                                    <p className="footer-delivery-time" style={{ fontSize: '13px', color: '#ff4757', fontWeight: '600', marginTop: '4px' }}>
+                                        ⏱️ Delivery Time: {order.deliveryTime || '30 - 45 mins'} {order.estimatedArrival && `(Arriving by ${order.estimatedArrival})`}
+                                    </p>
+                                    <p className="footer-address"><MapPin size={16} /> {typeof order.address === 'string' ? order.address : `${order.address.address}, ${order.address.city}`}</p>
                                 </div>
                                 <div className="footer-summary">
                                     <span>Total Amount</span>

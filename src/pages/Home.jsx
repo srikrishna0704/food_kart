@@ -12,8 +12,25 @@ const Home = () => {
     const location = useLocation();
 
     useEffect(() => {
-        setRestaurants(localRestaurants);
-        setLoading(false);
+        const fetchRestaurants = async () => {
+            try {
+                const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
+                const res = await fetch(`${apiUrl}/restaurants`);
+                if (res.ok) {
+                    const data = await res.json();
+                    if (data && data.length > 0) {
+                        setRestaurants(data);
+                        setLoading(false);
+                        return;
+                    }
+                }
+            } catch (err) {
+                console.warn("Using fallback local restaurants data");
+            }
+            setRestaurants(localRestaurants);
+            setLoading(false);
+        };
+        fetchRestaurants();
     }, []);
 
     // Handle scroll to section if hash exists in URL
