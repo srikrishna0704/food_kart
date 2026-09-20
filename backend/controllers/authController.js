@@ -29,7 +29,8 @@ exports.register = async (req, res) => {
         await user.save();
 
         // Create token
-        const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
+        const jwtSecret = process.env.JWT_SECRET || 'foodkart_jwt_secret_key_2026';
+        const token = jwt.sign({ id: user._id }, jwtSecret, {
             expiresIn: '7d'
         });
 
@@ -43,8 +44,8 @@ exports.register = async (req, res) => {
             }
         });
     } catch (error) {
-        console.error(error.message);
-        res.status(500).json({ message: 'Server error' });
+        console.error("Register Error:", error);
+        res.status(500).json({ message: error.message || 'Server error during registration' });
     }
 };
 
@@ -68,7 +69,8 @@ exports.login = async (req, res) => {
         }
 
         // Create token
-        const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
+        const jwtSecret = process.env.JWT_SECRET || 'foodkart_jwt_secret_key_2026';
+        const token = jwt.sign({ id: user._id }, jwtSecret, {
             expiresIn: '7d'
         });
 
@@ -82,8 +84,8 @@ exports.login = async (req, res) => {
             }
         });
     } catch (error) {
-        console.error(error.message);
-        res.status(500).json({ message: 'Server error' });
+        console.error("Login Error:", error);
+        res.status(500).json({ message: error.message || 'Server error during login' });
     }
 };
 

@@ -10,7 +10,7 @@ const app = express();
 app.use(express.json());
 app.use(cors());
 
-// Middleware to ensure DB connection on serverless calls
+// Ensure DB connection on serverless calls
 app.use(async (req, res, next) => {
     try {
         await connectDB();
@@ -21,13 +21,24 @@ app.use(async (req, res, next) => {
     }
 });
 
-// Health / status endpoints
-app.get('/api', (req, res) => res.json({ status: 'active', message: 'FoodKart API on Vercel', endpoints: ['/api/auth', '/api/address', '/api/orders', '/api/restaurants'] }));
+const authRoutes = require('../backend/routes/auth');
+const addressRoutes = require('../backend/routes/address');
+const orderRoutes = require('../backend/routes/order');
+const restaurantRoutes = require('../backend/routes/restaurant');
 
-// Routes
-app.use('/api/auth', require('../backend/routes/auth'));
-app.use('/api/address', require('../backend/routes/address'));
-app.use('/api/orders', require('../backend/routes/order'));
-app.use('/api/restaurants', require('../backend/routes/restaurant'));
+// Support both /api/... and /... routes for Vercel serverless function
+app.use('/api/auth', authRoutes);
+app.use('/auth', authRoutes);
+
+app.use('/api/address', addressRoutes);
+app.use('/address', addressRoutes);
+
+app.use('/api/orders', orderRoutes);
+app.use('/orders', orderRoutes);
+
+app.use('/api/restaurants', restaurantRoutes);
+app.use('/restaurants', restaurantRoutes);
+
+app.get(['/api', '/'], (req, res) => res.json({ status: 'active', message: 'FoodKart API on Vercel' }));
 
 module.exports = app;
