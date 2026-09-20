@@ -27,10 +27,19 @@ export const AuthProvider = ({ children }) => {
     const signup = async (userData) => {
         try {
             const { name, email, password } = userData;
-            await axios.post(`${API_URL}/auth/register`, { name, email, password });
+            const res = await axios.post(`${API_URL}/auth/register`, { name, email, password });
+            if (res.data?.token) {
+                localStorage.setItem('token', res.data.token);
+                localStorage.setItem('user', JSON.stringify(res.data.user));
+                setUser(res.data.user);
+            }
             return { success: true };
         } catch (error) {
-            throw new Error(error.response?.data?.message || 'Registration failed');
+            const serverMsg = error.response?.data?.message || (typeof error.response?.data === 'string' ? error.response.data : null);
+            if (!error.response) {
+                throw new Error('Unable to connect to backend server. Please check if backend is running on port 5000.');
+            }
+            throw new Error(serverMsg || 'Registration failed');
         }
     };
 
@@ -45,7 +54,11 @@ export const AuthProvider = ({ children }) => {
 
             return response.data;
         } catch (error) {
-            throw new Error(error.response?.data?.message || 'Login failed');
+            const serverMsg = error.response?.data?.message || (typeof error.response?.data === 'string' ? error.response.data : null);
+            if (!error.response) {
+                throw new Error('Unable to connect to backend server. Please check if backend is running on port 5000.');
+            }
+            throw new Error(serverMsg || 'Login failed');
         }
     };
 
