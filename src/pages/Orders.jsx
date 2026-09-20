@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 import { Package, Clock, MapPin, ShoppingBag } from 'lucide-react';
 import axios from 'axios';
 
-const API_URL = import.meta.env.VITE_API_URL || 'https://foodkart-backend-tmky.onrender.com/api';
+const API_URL = import.meta.env.VITE_API_URL || (import.meta.env.DEV ? 'http://localhost:5000/api' : '/api');
 
 const Orders = () => {
     const { user } = useAuth();

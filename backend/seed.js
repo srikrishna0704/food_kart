@@ -122,7 +122,8 @@ const restaurants = [
 
 const seedDB = async () => {
     try {
-        const dbUri = process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/foodkart';
+        const DEFAULT_MONGODB_URI = 'mongodb+srv://srikrishna0704_db_user:dhA9hIA5xv7a7HSY@cluster0.szprour.mongodb.net/foodkart?retryWrites=true&w=majority';
+        const dbUri = process.env.MONGODB_URI || DEFAULT_MONGODB_URI;
         await mongoose.connect(dbUri);
         console.log('Connected to MongoDB for seeding...');
 
